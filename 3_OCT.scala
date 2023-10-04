@@ -6,3 +6,6 @@ val arr = Array.range(1,1000,5)
 val Lista = List (1,3,3,4,6,7,3,7)
 val unicosLista = Lista.distinct
 
+//Crea una mapa mutable llamado nombres que contenga los siguiente
+var nombres = Map(("Jose", 20), ("Luis", 24), ("Ana", 23), ("Susana", "27"))
+
