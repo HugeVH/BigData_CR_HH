@@ -9,3 +9,7 @@ val unicosLista = Lista.distinct
 //Crea una mapa mutable llamado nombres que contenga los siguiente
 var nombres = Map(("Jose", 20), ("Luis", 24), ("Ana", 23), ("Susana", "27"))
 
+//6 a . Imprime todas la llaves del mapa
+nombres.keys
+println(s"Todas llaves $nombres.keys")
+
