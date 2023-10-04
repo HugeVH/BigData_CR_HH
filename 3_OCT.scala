@@ -13,3 +13,6 @@ var nombres = Map(("Jose", 20), ("Luis", 24), ("Ana", 23), ("Susana", "27"))
 nombres.keys
 println(s"Todas llaves $nombres.keys")
 
+//6 b . Agrega el siguiente valor al mapa("Miguel", 23)
+nombres += ("Miguel" -> 23)
+println(s"Todas llaves $nombres")
