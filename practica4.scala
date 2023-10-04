@@ -10,4 +10,6 @@
 6 b . Agrega el siguiente valor al mapa("Miguel", 23)*/
 
 //. Crea una lista llamada "lista" con los elementos "rojo", "blanco", "negro" 
-val lista = List ("red","white","black")
+val lista = List ("red","white","black") 
+//2. Añadir 5 elementos mas a "lista" "verde" ,"amarillo", "azul", "naranja", "perla"
+val updateList = lista :+ "verde":+"amarillo":+"azul":+"naranja":+"perla" 
