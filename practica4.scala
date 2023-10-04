@@ -13,3 +13,5 @@
 val lista = List ("red","white","black") 
 //2. Añadir 5 elementos mas a "lista" "verde" ,"amarillo", "azul", "naranja", "perla"
 val updateList = lista :+ "verde":+"amarillo":+"azul":+"naranja":+"perla" 
+//3. Traer los elementos de "lista" "verde", "amarillo", "azul" 
+updateList slice(3,6) 
