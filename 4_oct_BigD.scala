@@ -61,7 +61,7 @@ val fullgreet = greetName("Christian")
 println(fullgreet)
 
 
-//Funcion que evalua si un numero es primo
+//Funcion que evalua si un numero es primo..
 def isPrime(num:Int): Boolean = {
     for(n <- Range(2, num)){
         //Condicion si la division es cero
