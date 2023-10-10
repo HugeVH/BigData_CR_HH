@@ -36,9 +36,9 @@ def simple(): Unit = {
 simple()
 
 //Funcion añadir la cual tiene dos parametro de entrada tipo entero
-def adder(num1:Int, num2:Int): Int = {
+def adder(numero1:Int, numero2:Int): Int = {
     //regresa la suma de dos valores
-    return num1 + num2
+    return numero1 + numero2
 }
 //Esta es la llamada a la funcion
 adder(5, 5)
