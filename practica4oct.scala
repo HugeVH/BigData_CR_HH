@@ -27,7 +27,7 @@ println("###########")
 
 
 // Functions 
-//Define la funcion "simple" sin argumentos y no devuelve valores "unit"
+//Define la funcion "simple" sin argumentos y no devuelve valores "unit".
 def simple(): Unit = {
     //imprime la etiqueta print
     println("simple print")
