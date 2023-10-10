@@ -13,7 +13,7 @@ while(x < 5){
 
 //Declara variable y=0
 var y = 0
-//Mientras y<10, se imprimen dos mensajes y se pone condicion
+//Mientras y<10, se imprimen dos mensajes y se pone condicion.
 while(y < 10){
     println(s"y is currently $y")
     println(s"y is still less then 10, add 1 to y")
