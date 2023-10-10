@@ -54,6 +54,7 @@ def greetName(name:String): String={
     //Concatenacion de las cadenas
     return s"Hello $name"
 }
+
 // declara "fullgreat" y le asigna el valor devuelto por la fucion greetname
 val fullgreet = greetName("Christian")
 //imprime el valor de la funcion greetname
