@@ -74,7 +74,7 @@ def isPrime(num:Int): Boolean = {
 println(isPrime(10))
 println(isPrime(23))
 
-//se declara una lista con numeros enteros
+//se declara una lista con numeros enteros.
 val numbers = List(1,2,3,7)
 
 //Se declara la funcion check la cual recibe una lista de enteros y regresa una lista de enteros
