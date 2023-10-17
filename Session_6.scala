@@ -55,7 +55,7 @@ def balance(list:List[Int]): Boolean={
     }
     return false 
 }
-
+//
 val bl = List(3,2,1)
 val bl2 = List(2,3,3,2)
 val bl3 = List(10,30,90)
