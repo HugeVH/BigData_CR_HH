@@ -8,3 +8,6 @@ Este codigo muestra dos listas (arreglos), de los cuales analiza uno de ellos. E
 
 ###Ejercicio 2
 En el siguiente ejercicio, se muestra un algoritmo el cual desplega tres listas, de las cuales menciona si los numeros son mayor a 7, suma 14, caso contrario solo suma el valor ingresado.
+
+###Ejercicio 3 
+es una funcion que te regresa el string invertido
