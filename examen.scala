@@ -18,7 +18,7 @@ HVRatio.show()
 //8 Este es el ejercicio 8 
 df.select(max("OPEN")).show()
 
-//9
+//9 Este es el ejercicio 9
 df.select(max("Volume"),min("Volume")).show()
 
 //10
