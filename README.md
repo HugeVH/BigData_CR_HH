@@ -1,5 +1,6 @@
-#Primer examen parcial de Big Data
-#####- 6.- Utiliza el metodo Describe() para aprender mas sobre el DataFrame()
+# Primer examen parcial de Big Data
+
+##### 6.- Utiliza el metodo Describe() para aprender mas sobre el DataFrame()
 - El metodo Describe es utilizado para mostrar parametros estadisticos para cada una de las columnas de datos.
 	a) El primer parametro es count, el cual muestra la cantidad de datos que se tienen.
 	b) El segundo parametro es mean es la media de datos, es una medida de tendencia central al igual que la mediana y moda.
