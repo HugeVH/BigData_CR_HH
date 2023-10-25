@@ -21,7 +21,7 @@ df.select(max("OPEN")).show()
 //9 Este es el ejercicio 9
 df.select(max("Volume"),min("Volume")).show()
 
-//10
+//10 Este es el ejercicio 10
 df.select(max("Volume"),min("Volume")).show()
 
 //11_a a) ¿Cuántos días fue la columna “Close” inferior a $ 600?
