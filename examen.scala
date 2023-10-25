@@ -11,10 +11,11 @@ df.describe().show()
 
 
 //7
+
 val HVRatio = df.withColumn("HV Ratio", $"Volume" / $"High")
 HVRatio.show()
 
-//8
+//8 Este es el ejercicio 8 
 df.select(max("OPEN")).show()
 
 //9
