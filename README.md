@@ -12,6 +12,12 @@
 
 a) Esta relacion es para saber cuantas acciones se vendieron en un dia de trabajo.
 
+##### 8.-Que dia tuvo el pico mas alto la columna Open??
+a) R. dia 708
+
+
+
+
 
 
 ### Analisis del codigo de la sesion 6
