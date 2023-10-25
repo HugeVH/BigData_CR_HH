@@ -38,7 +38,7 @@ df.filter($"Close"<600).count()
         df2.groupBy("Year").max("High").show()  
 
 
-//   e) ¿Cuál es el promedio de la columna “Close” para cada mes del calendario?
+//   e) Ejercicio 11 inciso e) ¿Cuál es el promedio de la columna “Close” para cada mes del calendario?
         val df3 = df2.withColumn("Month", month(df("Date")))
         df3.groupBy("Month").avg("Close").show()
 
