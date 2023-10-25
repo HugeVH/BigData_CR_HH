@@ -27,7 +27,7 @@ df.select(max("Volume"),min("Volume")).show()
 //11_a Ejercicio 11 inciso a)  ¿Cuántos días fue la columna “Close” inferior a $ 600?
 df.filter($"Close"<600).count()
 
-// b) ¿Qué porcentaje del tiempo fue la columna “High” mayor que $ 500?
+// b) Este es el ejercicio 11 inciso b) ¿Qué porcentaje del tiempo fue la columna “High” mayor que $ 500?
 (df.filter($"High">500).count()*1.0/df.count())*100
 
 // c) ¿Cuál es la correlación de Pearson entre columna “High” y la columna “Volumen”?
