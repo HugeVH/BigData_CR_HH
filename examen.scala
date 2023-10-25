@@ -24,7 +24,7 @@ df.select(max("Volume"),min("Volume")).show()
 //10 Este es el ejercicio 10
 df.select(max("Volume"),min("Volume")).show()
 
-//11_a a) ¿Cuántos días fue la columna “Close” inferior a $ 600?
+//11_a Ejercicio 11 inciso a)  ¿Cuántos días fue la columna “Close” inferior a $ 600?
 df.filter($"Close"<600).count()
 
 // b) ¿Qué porcentaje del tiempo fue la columna “High” mayor que $ 500?
