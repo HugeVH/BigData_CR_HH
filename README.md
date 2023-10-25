@@ -15,6 +15,48 @@ a) Esta relacion es para saber cuantas acciones se vendieron en un dia de trabaj
 ##### 8.-Que dia tuvo el pico mas alto la columna Open??
 a) R. dia 708
 
+##### 9. ¿Cuál es el significado de la columna Cerrar “Close” en el contexto de información
+##### financiera, explíquelo no hay que codificar nada?
+R. El valor de la accion al momento de cerrar el dia.
+
+##### 10. ¿Cuál es el máximo y mínimo de la columna “Volumen”?
+R. min= 3531300, max= 315541800
+
+##### 11. Con Sintaxis Scala/Spark $ conteste lo siguiente:
+##### a) ¿Cuántos días fue la columna “Close” inferior a $ 600?
+R. 1218.
+
+##### ¿Qué porcentaje del tiempo fue la columna “High” mayor que $ 500?
+R. 4.29
+
+##### c) ¿Cuál es la correlación de Pearson entre columna “High” y la columna
+##### “Volumen”?
+R. -0.209 "una correlacion debil"
+
+##### d) ¿Cuál es el máximo de la columna “High” por año?
+2015---716.15
+2013---389.15
+2014---489.29
+2012---133.42
+2016---129.28
+2011---120.28
+
+##### e) ¿Cuál es el promedio de la columna “Close” para cada mes del calendario?
+Mes----Close
+12-----199.37
+1---212.22
+6---295.15
+3---249.58
+5---264.37
+9---206.09
+4---246.97
+8---195.25
+7---243.64
+10---205.93
+11---194.31
+2---254.19
+
+
 
 
 
