@@ -7,6 +7,20 @@
 	c) El tercer parametro es stddev, la cual es una medida de dispersion que indica que tan alejados se encuentran los datos respecto a la media.
 	d) los siguientes parametros (min y max) definen el maximo y minimo de los datos por columna. Consecuentemente, permiten obtener el rango de datos.
 
+	```sh
+	+----+------------------+
+|Year|         max(High)|
++----+------------------+
+|2015|        716.159996|
+|2013|        389.159988|
+|2014|        489.290024|
+|2012|        133.429996|
+|2016|129.28999299999998|
+|2011|120.28000300000001|
++----+------------------+
+	```
+
+
 
 ### Analisis del codigo de la sesion 6
 

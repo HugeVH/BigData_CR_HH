@@ -6,47 +6,23 @@ val df = spark.read.option("header", "true").option("inferSchema","true")csv("Ne
 
 df.printSchema()
 df.show()
-df.show(5)
+df.show(1)
 df.describe().show()
-
-
-//7
 
 val HVRatio = df.withColumn("HV Ratio", $"Volume" / $"High")
 HVRatio.show()
 
-//8 Este es el ejercicio 8 
 df.select(max("OPEN")).show()
-
-//9 Este es el ejercicio 9
 df.select(max("Volume"),min("Volume")).show()
 
-//10 Este es el ejercicio 10
-df.select(max("Volume"),min("Volume")).show()
-
-//11_a Ejercicio 11 inciso a)  ¿Cuántos días fue la columna “Close” inferior a $ 600?
 df.filter($"Close"<600).count()
 
-// b) Este es el ejercicio 11 inciso b) ¿Qué porcentaje del tiempo fue la columna “High” mayor que $ 500?
 (df.filter($"High">500).count()*1.0/df.count())*100
 
-// c) Este es el ejercicio 11 inciso c)...¿Cuál es la correlación de Pearson entre columna “High” y la columna “Volumen”?
- df.select(corr($"High", $"Volume")).show()
+df.select(corr($"High", $"Volume")).show()
 
- //d) Este es el ejercicio 11 inciso d)   ¿Cuál es el máximo de la columna “High” por año?
- val df2 = df.withColumn("Year", year(df("Date")))
-        df2.groupBy("Year").max("High").show()  
+val df2 = df.withColumn("Year", year(df("Date")))
+          df2.groupBy("Year").max("High").show()  
 
-
-//   e) Ejercicio 11 inciso e) ultimo ¿Cuál es el promedio de la columna “Close” para cada mes del calendario?
-        val df3 = df2.withColumn("Month", month(df("Date")))
+ val df3 = df2.withColumn("Month", month(df("Date")))
         df3.groupBy("Month").avg("Close").show()
-
-
-
-
-
-
-
-
-
