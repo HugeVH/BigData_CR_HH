@@ -182,3 +182,111 @@ treeModel: org.apache.spark.ml.classification.DecisionTreeClassificationModel = 
 scala>     println(s"Learned classification tree model:\n ${treeModel.toDebugString}")
 
  ```
+ # PRACTICA 4 PERCEPTRON MULTYLAYER CLASSIFIER 
+
+ ```sh
+ Using Scala version 2.12.17 (Java HotSpot(TM) 64-Bit Server VM, Java 11.0.19)
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala> import org.apache.spark.ml.classification.MultilayerPerceptronClassifier
+import org.apache.spark.ml.classification.MultilayerPerceptronClassifier
+
+scala> import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+
+scala>
+
+scala> // Load the data stored in LIBSVM format as a DataFrame.
+
+scala> val data = spark.read.format("libsvm").load("sample_multiclass_classification_data.txt")
+23/11/22 19:49:23 WARN LibSVMFileFormat: 'numFeatures' option not specified, determining the number of features by going though the input. If you know the number in advance, please specify it via 'numFeatures' option to avoid the extra scan.
+data: org.apache.spark.sql.DataFrame = [label: double, features: vector]
+
+scala> data.show()
++-----+--------------------+
+|label|            features|
++-----+--------------------+
+|  1.0|(4,[0,1,2,3],[-0....|
+|  1.0|(4,[0,1,2,3],[-0....|
+|  1.0|(4,[0,1,2,3],[-0....|
+|  1.0|(4,[0,1,2,3],[-0....|
+|  0.0|(4,[0,1,2,3],[0.1...|
+|  1.0|(4,[0,2,3],[-0.83...|
+|  2.0|(4,[0,1,2,3],[-1....|
+|  2.0|(4,[0,1,2,3],[-1....|
+|  1.0|(4,[0,1,2,3],[-0....|
+|  0.0|(4,[0,2,3],[0.611...|
+|  0.0|(4,[0,1,2,3],[0.2...|
+|  1.0|(4,[0,1,2,3],[-0....|
+|  1.0|(4,[0,1,2,3],[-0....|
+|  2.0|(4,[0,1,2,3],[-0....|
+|  2.0|(4,[0,1,2,3],[-0....|
+|  2.0|(4,[0,1,2,3],[-0....|
+|  1.0|(4,[0,2,3],[-0.94...|
+|  2.0|(4,[0,1,2,3],[-0....|
+|  0.0|(4,[0,1,2,3],[0.1...|
+|  2.0|(4,[0,1,2,3],[-0....|
++-----+--------------------+
+only showing top 20 rows
+
+
+scala> val splits = data.randomSplit(Array(0.6, 0.4), seed = 1234L)
+splits: Array[org.apache.spark.sql.Dataset[org.apache.spark.sql.Row]] = Array([label: double, features: vector], [label: double, features: vector])
+
+scala> val train = splits(0)
+train: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] = [label: double, features: vector]
+
+scala> val test = splits(1)
+test: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] = [label: double, features: vector]
+
+scala> val layers = Array[Int](4, 5, 4, 3)
+layers: Array[Int] = Array(4, 5, 4, 3)
+
+scala> val trainer = new MultilayerPerceptronClassifier().setLayers(layers).setBlockSize(128).setSeed(1234L).setMaxIter(100)
+trainer: org.apache.spark.ml.classification.MultilayerPerceptronClassifier = mlpc_569c7e8f9eb9
+
+scala> val model = trainer.fit(train)
+model: org.apache.spark.ml.classification.MultilayerPerceptronClassificationModel = MultilayerPerceptronClassificationModel: uid=mlpc_569c7e8f9eb9, numLayers=4, numClasses=3, numFeatures=4
+
+scala> val result = model.transform(test)
+result: org.apache.spark.sql.DataFrame = [label: double, features: vector ... 3 more fields]
+
+scala> val predictionAndLabels = result.select("prediction", "label")
+predictionAndLabels: org.apache.spark.sql.DataFrame = [prediction: double, label: double]
+
+scala> predictionAndLabels.show()
++----------+-----+
+|prediction|label|
++----------+-----+
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       2.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
+|       0.0|  0.0|
++----------+-----+
+only showing top 20 rows
+
+
+scala> val evaluator = new MulticlassClassificationEvaluator().setMetricName("accuracy")
+evaluator: org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator = MulticlassClassificationEvaluator: uid=mcEval_87c2fa45d321, metricName=accuracy, metricLabel=0.0, beta=1.0, eps=1.0E-15
+
+scala> println(s"Test set accuracy = ${evaluator.evaluate(predictionAndLabels)}")
+Test set accuracy = 0.9523809523809523
+
+ ```
