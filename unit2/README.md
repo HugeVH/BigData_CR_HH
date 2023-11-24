@@ -1,4 +1,196 @@
 # Nuestra branch unit2 
+
+//PRACTICA 1 U2 EN EQUIPO LOS PERRONES
+
+# Unit2 Practice 1 LINEAR REGRESSION EXERCISE
+### Import LinearRegression
+```scala
+import org.apache.spark.ml.regression.LinearRegression
+import org.apache.spark.sql.SparkSession
+```
+```sh
+scala> import org.apache.spark.ml.regression.LinearRegression
+import org.apache.spark.ml.regression.LinearRegression
+
+scala> import org.apache.spark.sql.SparkSession
+import org.apache.spark.sql.SparkSession
+```
+### Opcional: Utilice el siguiente codigo para configurar errores
+```scala
+import org.apache.log4j._
+Logger.getLogger("org").setLevel(Level.ERROR)
+```
+```sh
+scala> import org.apache.log4j._
+import org.apache.log4j._
+scala> Logger.getLogger("org").setLevel(Level.ERROR)
+```
+
+### Inicie una simple Sesion Spark
+```scala
+val spark = SparkSession.builder().getOrCreate()
+```
+```sh
+scala> val spark = SparkSession.builder().getOrCreate()
+spark: org.apache.spark.sql.SparkSession = org.apache.spark.sql.SparkSession@60a0f09f
+```
+
+### Utilice Spark para el archivo csv Clean-Ecommerce 
+```scala
+val data  = spark.read.option("header","true").option("inferSchema", "true").format("csv").load("Clean-Ecommerce.csv")
+```
+```sh
+scala> val data  = spark.read.option("header","true").option("inferSchema", "true").format("csv").load("Clean-Ecommerce.csv")
+data: org.apache.spark.sql.DataFrame = [Email: string, Avatar: string ... 5 more fields]
+```
+### Imprima el schema en el DataFrame
+```scala
+data.printSchema()
+```
+```sh
+scala> data.printSchema()
+root
+ |-- Email: string (nullable = true)
+ |-- Avatar: string (nullable = true)
+ |-- Avg Session Length: double (nullable = true)
+ |-- Time on App: double (nullable = true)
+ |-- Time on Website: double (nullable = true)
+ |-- Length of Membership: double (nullable = true)
+ |-- Yearly Amount Spent: double (nullable = true)
+```
+### Imprima un renglon de ejemplo del DataFrane.
+```scala
+data.head(1)
+```
+```sh
+scala> data.head(1)
+res2: Array[org.apache.spark.sql.Row] = Array([mstephenson@fernandez.com,Violet,34.49726772511229,12.65565114916675,39.57766801952616,4.0826206329529615,587.9510539684005])
+```
+### Transforme el data frame para que tome la forma de ("label","features")
+### Importe VectorAssembler y Vectors
+```scala
+import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.ml.linalg.Vectors
+```
+```sh
+import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.ml.linalg.Vectors
+```
+
+### Renombre la columna Yearly Amount Spent como "label", Tambien de los datos tome solo la columa numerica, Deje todo esto como un nuevo DataFrame que se llame df
+```scala
+data.columns
+val df = data.select(data("Yearly Amount Spent").as("label"), $"Avg Session Length", $"Time on App", $"Time on Website", $"Length of Membership")
+```
+```sh
+val res3: Array[String] = Array(Email, Avatar, Avg Session Length, Time on App, Time on Website, Length of Membership, Yearly Amount Spent)
+val df: org.apache.spark.sql.DataFrame = [label: double, Avg Session Length: double ... 3 more fields]
+```
+
+### Utilice el objeto VectorAssembler para convertir la columnas de entradas del df, a una sola columna de salida de un arreglo llamado  "features", Configure las columnas de entrada de donde se supone que leemos los valores, Llamar a esto nuevo assambler.
+```scala
+val assembler = new VectorAssembler().setInputCols(Array("Avg Session Length", "Time on App", "Time on Website", "Length of Membership")).setOutputCol("features")
+```
+```sh
+val assembler: org.apache.spark.ml.feature.VectorAssembler = VectorAssembler: uid=vecAssembler_115df6a50100, handleInvalid=error, numInputCols=4
+```
+
+### Utilice el assembler para transform nuestro DataFrame a dos columnas: label and features
+```scala
+val output = assembler.transform(df).select($"label", $"features")
+```
+```sh
+val output: org.apache.spark.sql.DataFrame = [label: double, features: vector]
+```
+
+### Crear un objeto para modelo de regresion linea.
+```scala
+var lr = new LinearRegression()
+```
+```sh
+scala> var lr = new LinearRegression()
+lr: org.apache.spark.ml.regression.LinearRegression = linReg_06172a1924ab
+```
+
+###  Ajuste el modelo para los datos y llame a este modelo lrModelo
+```scala
+var lrModelo = lr.fit(output)
+```
+```sh
+scala> var lrModelo = lr.fit(output)
+23/11/20 15:17:06 WARN Instrumentation: [959d57c4] regParam is zero, which might cause numerical instability and overfitting.
+lrModelo: org.apache.spark.ml.regression.LinearRegressionModel = LinearRegressionModel: uid=linReg_06172a1924ab, numFeatures=4
+```
+
+### Imprima the  coefficients y intercept para la regresion lineal
+```scala
+lrModelo.coefficients
+lrModelo.intercept
+```
+```sh
+scala> lrModelo.coefficients
+res19: org.apache.spark.ml.linalg.Vector = [25.734271084670716,38.709153810828816,0.43673883558514964,61.57732375487594]
+
+scala> lrModelo.intercept
+res20: Double = -1051.5942552990748
+```
+
+### Resuma el modelo sobre el conjunto de entrenamiento imprima la salida de algunas metricas!,Utilize metodo .summary de nuestro  modelo para crear un objeto llamado trainingSummary Muestre los valores de residuals, el RMSE, el MSE, y tambien el R^2 .
+```scala
+val trainingSummary = lrModelo.summary
+
+trainingSummary.residuals.show()
+trainingSummary.rootMeanSquaredError
+trainingSummary.meanSquaredError
+trainingSummary.r2
+```
+```sh
+scala> val trainingSummary = lrModelo.summary
+trainingSummary: org.apache.spark.ml.regression.LinearRegressionTrainingSummary = org.apache.spark.ml.regression.LinearRegressionTrainingSummary@626519ef
+
+scala>
+
+scala> trainingSummary.residuals.show()
++-------------------+
+|          residuals|
++-------------------+
+| -6.788234090018818|
+| 11.841128565326073|
+| -17.65262700858966|
+| 11.454889631178617|
+| 7.7833824373080915|
+|-1.8347332184773677|
+|  4.620232401352382|
+| -8.526545950978175|
+| 11.012210896516763|
+|-13.828032682158891|
+| -16.04456458615175|
+|  8.786634365463442|
+| 10.425717191807507|
+| 12.161293785003522|
+|  9.989313714461446|
+| 10.626662732649379|
+|  20.15641408428496|
+|-3.7708446586326545|
+| -4.129505481591934|
+|  9.206694655890487|
++-------------------+
+only showing top 20 rows
+
+
+scala> trainingSummary.rootMeanSquaredError
+res30: Double = 9.923256785022229
+
+scala> trainingSummary.meanSquaredError
+res31: Double = 98.47102522148971
+
+scala> trainingSummary.r2
+res32: Double = 0.9843155370226727
+```
+
+
+
+
 # PRACTICA 3 DECISON TREE CLASISFFIER CON SCALA Y SPARK
  ```sh
  scala> :load DECISIONTREECLASSIFICATIONMODEL.scala
