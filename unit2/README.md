@@ -696,6 +696,7 @@ Test set accuracy = 0.9523809523809523
 
  # PRACTICA EVALUATORIA 
 
+### Librerias
  ```SH 
  scala> import org.apache.spark.ml.classification.MultilayerPerceptronClassifier 
 import org.apache.spark.ml.classification.MultilayerPerceptronClassifier
@@ -719,10 +720,22 @@ scala> import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.Pipeline
 
 scala>
+```
 
+### Cargar el archivo iris
+
+```sh
 scala> var iris = spark.read.option("header","true").option("inferSchema", "true").format("csv").load("iris.csv")
 iris: org.apache.spark.sql.DataFrame = [sepal_length: double, sepal_width: double ... 3 more fields]
+```
 
+### Mostrar el esquema (muestra los primeros 20 renglones)
+
+```scala
+iris.show() 
+```
+
+```sh
 scala> iris.show() 
 +------------+-----------+------------+-----------+-------+
 |sepal_length|sepal_width|petal_length|petal_width|species|
@@ -750,7 +763,14 @@ scala> iris.show()
 +------------+-----------+------------+-----------+-------+
 only showing top 20 rows
 
+```
+### Imprimir el esquema
 
+```scala
+iris.printSchema()
+```
+
+```sh
 scala> iris.printSchema()
 root
  |-- sepal_length: double (nullable = true)
@@ -759,7 +779,15 @@ root
  |-- petal_width: double (nullable = true)
  |-- species: string (nullable = true)
 
+```
 
+### Imprime los primeros 5 renglones
+
+``` scala
+iris.show(5) 
+```
+
+```sh
 scala> iris.show(5)
 +------------+-----------+------------+-----------+-------+
 |sepal_length|sepal_width|petal_length|petal_width|species|
@@ -772,6 +800,13 @@ scala> iris.show(5)
 +------------+-----------+------------+-----------+-------+
 only showing top 5 rows
 
+```
+### Mostrar la descripcion del esquema
+```scala
+iris.describe().show()
+```
+
+```sh
 
 scala> iris.describe().show()
 23/11/22 20:25:05 WARN package: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
@@ -784,14 +819,20 @@ scala> iris.describe().show()
 |    min|               4.3|                2.0|               1.0|               0.1|   setosa|
 |    max|               7.9|                4.4|               6.9|               2.5|virginica|
 +-------+------------------+-------------------+------------------+------------------+---------+
+```
+### Haga la transformacion pertinente para los datos categoricos los cuales seran nuestras etiquetas a clasificar
 
+```scala
+val assembler = new VectorAssembler().setInputCols(Array("sepal_length", "sepal_width", "petal_length", "petal_width")).setOutputCol("features")
+```
 
+```sh
 scala> val assembler = new VectorAssembler().setInputCols(Array("sepal_length", "sepal_width", "petal_length", "petal_width")).setOutputCol("features")   
 assembler: org.apache.spark.ml.feature.VectorAssembler = VectorAssembler: uid=vecAssembler_fc2de4a451a0, handleInvalid=error, numInputCols=4
 
 scala> val features = assembler.transform(iris)
 features: org.apache.spark.sql.DataFrame = [sepal_length: double, sepal_width: double ... 4 more fields]
-
+```
 scala> features.show()
 +------------+-----------+------------+-----------+-------+-----------------+
 |sepal_length|sepal_width|petal_length|petal_width|species|         features|
