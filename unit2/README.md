@@ -188,9 +188,220 @@ scala> trainingSummary.r2
 res32: Double = 0.9843155370226727
 ```
 
+# PRACTICA 2 LOGISTIC REGRESION
 
+### Inicia una sesion en Spark
+```scala
+val spark = SparkSession.builder().getOrCreate()
 
+```
+```sh
+scala> val spark = SparkSession.builder().getOrCreate()
+spark: org.apache.spark.sql.SparkSession = org.apache.spark.sql.SparkSession@38207d19
+```
 
+### Utilice Spark para leer el archivo csv Advertising.
+```scala
+val data  = spark.read.option("header","true").option("inferSchema", "true").format("csv").load("advertising.csv")
+
+```
+```sh
+scala> val data  = spark.read.option("header","true").option("inferSchema", "true").format("csv").load("advertising.csv")
+data: org.apache.spark.sql.DataFrame = [Daily Time Spent on Site: double, Age: int ... 8 more fields]
+```
+
+### Imprima el Schema del DataFrame
+```scala
+
+data.printSchema()
+```
+```sh
+scala> data.printSchema()
+root
+ |-- Daily Time Spent on Site: double (nullable = true)
+ |-- Age: integer (nullable = true)
+ |-- Area Income: double (nullable = true)
+ |-- Daily Internet Usage: double (nullable = true)
+ |-- Ad Topic Line: string (nullable = true)
+ |-- City: string (nullable = true)
+ |-- Male: integer (nullable = true)
+ |-- Country: string (nullable = true)
+ |-- Timestamp: timestamp (nullable = true)
+ |-- Clicked on Ad: integer (nullable = true)
+```
+
+### Imprimir un renglon de ejemplo
+
+```scala
+data.head(1)
+```
+```sh
+scala> data.head(1)
+res3: Array[org.apache.spark.sql.Row] = Array([68.95,35,61833.9,256.09,Cloned 5thgeneration orchestration,Wrightburgh,0,Tunisia,2016-03-27 00:53:11.0,0])
+```
+
+### Tome la siguientes columnas como features "Daily Time Spent on Site","Age","Area Income","Daily Internet Usage","Timestamp","Male"
+
+```scala
+val logregdata = timedata.select(data("Clicked on Ad").as("label"), $"Daily Time Spent on Site", $"Age", $"Area Income", $"Daily Internet Usage", $"Hour", $"Male")
+```
+```sh
+scala> val logregdata = timedata.select(data("Clicked on Ad").as("label"), $"Daily Time Spent on Site", $"Age", $"Area Income", $"Daily Internet Usage", $"Hour", $"Male")
+```
+
+### Cree una nueva clolumna llamada "Hour" del Timestamp conteniendo la  "Hour of the click" 
+
+```scala
+val timedata = data.withColumn("Hour",hour(data("Timestamp")))
+```
+```sh
+scala> val timedata = data.withColumn("Hour",hour(data("Timestamp")))
+timedata: org.apache.spark.sql.DataFrame = [Daily Time Spent on Site: double, Age: int ... 9 more fields]
+```
+
+### Importe VectorAssembler y Vectors
+```scala
+import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.ml.linalg.Vectors
+```
+```sh
+scala> import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.ml.feature.VectorAssembler
+
+scala> import org.apache.spark.ml.linalg.Vectors
+import org.apache.spark.ml.linalg.Vectors
+```
+
+###   Cree un nuevo objecto VectorAssembler llamado assembler para los feature
+
+```scala
+val assembler = (new VectorAssembler()
+                  .setInputCols(Array("Daily Time Spent on Site", "Age","Area Income","Daily Internet Usage","Hour","Male"))
+                  .setOutputCol("features"))
+```
+```sh
+
+scala> val assembler = (new VectorAssembler()
+     |                   .setInputCols(Array("Daily Time Spent on Site", "Age","Area Income","Daily Internet Usage","Hour","Male"))
+     |                   .setOutputCol("features"))
+assembler: org.apache.spark.ml.feature.VectorAssembler = VectorAssembler: uid=vecAssembler_77900d31765a, handleInvalid=error, numInputCols=6
+```
+
+### Utilice randomSplit para crear datos de train y test divididos en 70/30   
+
+```scala
+val Array(training, test) = logregdata.randomSplit(Array(0.7, 0.3), seed = 12345)
+```
+```sh
+scala> val Array(training, test) = logregdata.randomSplit(Array(0.7, 0.3), seed = 12345)
+training: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] = [label: int, Daily Time Spent on Site: double ... 5 more fields]
+test: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] = [label: int, Daily Time Spent on Site: double ... 5 more fields]
+```
+
+### Importe  Pipeline  
+
+```scala
+import org.apache.spark.ml.Pipeline
+```
+```sh
+scala> import org.apache.spark.ml.Pipeline
+import org.apache.spark.ml.Pipeline
+```
+
+###  Cree un nuevo objeto de  LogisticRegression llamado lr 
+
+```scala
+val lr = new LogisticRegression()
+```
+```sh
+scala> val lr = new LogisticRegression()
+lr: org.apache.spark.ml.classification.LogisticRegression = logreg_93302a572127
+```
+
+###  Cree un nuevo  pipeline con los elementos: assembler, lr
+
+```scala
+val pipeline = new Pipeline().setStages(Array(assembler, lr))
+```
+```sh
+scala> val pipeline = new Pipeline().setStages(Array(assembler, lr))
+pipeline: org.apache.spark.ml.Pipeline = pipeline_0b4b2e9e5aae
+```
+
+###  Ajuste (fit) el pipeline para el conjunto de training.
+
+```scala
+val model = pipeline.fit(training)
+```
+```sh
+scala> val model = pipeline.fit(training)
+23/11/24 19:09:34 WARN InstanceBuilder: Failed to load implementation from:dev.ludovic.netlib.blas.JNIBLAS
+model: org.apache.spark.ml.PipelineModel = pipeline_0b4b2e9e5aae
+```
+
+###  Tome los Resultados en el conjuto Test con transform
+
+```scala
+val results = model.transform(test)
+```
+```sh
+scala> val results = model.transform(test)
+results: org.apache.spark.sql.DataFrame = [label: int, Daily Time Spent on Site: double ... 9 more fields]
+```
+###  Para Metrics y Evaluation importe MulticlassMetrics
+
+```scala
+import org.apache.spark.mllib.evaluation.MulticlassMetrics
+```
+```sh
+scala> import org.apache.spark.mllib.evaluation.MulticlassMetrics
+import org.apache.spark.mllib.evaluation.MulticlassMetrics
+```
+
+###  Convierta los resutalos de prueba (test) en RDD utilizando .as y .rdd
+
+```scala
+val predictionAndLabels = results.select($"prediction",$"label").as[(Double, Double)].rdd
+```
+```sh
+scala> val predictionAndLabels = results.select($"prediction",$"label").as[(Double, Double)].rdd
+predictionAndLabels: org.apache.spark.rdd.RDD[(Double, Double)] = MapPartitionsRDD[65] at rdd at <console>:32
+```
+
+###  Inicialice un objeto MulticlassMetrics 
+
+```scala
+val metrics = new MulticlassMetrics(predictionAndLabels)
+```
+```sh
+scala> val metrics = new MulticlassMetrics(predictionAndLabels)
+metrics: org.apache.spark.mllib.evaluation.MulticlassMetrics = org.apache.spark.mllib.evaluation.MulticlassMetrics@7904ee3c
+```
+
+###  Imprima la  Confusion matrix 
+
+```scala
+println("Confusion matrix:")
+println(metrics.confusionMatrix)
+```
+```sh
+scala> println("Confusion matrix:")
+Confusion matrix:
+
+scala> println(metrics.confusionMatrix)
+136.0  1.0
+4.0    146.0
+```
+
+### Accurancy  
+
+```scala
+metrics.accuracy
+```
+```sh
+scala> metrics.accuracy
+res6: Double = 0.9825783972125436
+```
 # PRACTICA 3 DECISON TREE CLASISFFIER CON SCALA Y SPARK
  ```sh
  scala> :load DECISIONTREECLASSIFICATIONMODEL.scala
